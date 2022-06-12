@@ -12,6 +12,9 @@ Schedule::Schedule(const vector<Team>& _teams):league(_teams){
 Schedule::Schedule(const vector<string>& _teams):league(_teams){
     init();
 }
+Schedule::Schedule(const League& _league):league(_league){
+    init();
+}
 
 void Schedule::init(){
     size_t i = 0;
@@ -70,11 +73,14 @@ void Schedule::processRound(){
         }
         Game* newGame = new Game(&team1.getName(),team1.getSkill(),
                                 &team2.getName(), team2.getSkill());
-        league.addGame(newGame);
+        addGame(newGame);
     }
 
 }
-
+void Schedule::addGame(Game*& game){
+    getTeam(game->getHome()).addGame(game);
+    getTeam(game->getAway()).addGame(game);
+}
 
 void Schedule::endGame(){
     while(round < 2*(MAX_TEAMS-1)){

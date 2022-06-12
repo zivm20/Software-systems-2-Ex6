@@ -3,7 +3,7 @@
 #include <vector>
 
 namespace basketball{
-    class Schedule{
+    class Schedule:public League{
         
         private:
             string matchups[2][MAX_TEAMS/2];
@@ -11,6 +11,7 @@ namespace basketball{
             League league;
             void init();
             void processRound();
+            void addGame(Game*& game);
             
         public:
             Schedule();
@@ -19,7 +20,7 @@ namespace basketball{
             Schedule(const std::vector<std::string>& _teams);
             void roundRobin();
             void endGame();
-
+            
             
             inline size_t getRound(){return round;}
             

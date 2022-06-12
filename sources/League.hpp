@@ -20,7 +20,7 @@ namespace basketball{
             inline std::map<std::string,Team>& getTeams(){
                 return this->teams;
             }
-            void addGame(Game*& game);
+            
 
             
 

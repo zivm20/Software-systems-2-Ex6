@@ -41,11 +41,10 @@ namespace basketball{
             inline double getSkill() const {return skill;}
             inline std::string getName() const{return name;}
             inline void addGame(Game* game){teamGames.push_back(game);}
-
+            inline vector<Game*> getGames()const{return teamGames;}
             int getWinCount();
             int getLongestStreak(bool win);
             int getScoreDiff();
-            
             int getHardestWin();
 
             ~Team();

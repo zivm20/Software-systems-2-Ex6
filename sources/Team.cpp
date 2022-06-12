@@ -2,9 +2,6 @@
 using namespace basketball;
 using namespace std;
 
-
-
-
 Team::Team(std::string _name):name(_name),skill(random()){
 
 }
