@@ -47,7 +47,7 @@ namespace basketball{
             int getWinCount()const;
             int getLongestStreak(bool win)const;
             int getScoreDiff()const;
-            
+            double getAvgPoints()const;
 
             ~Team();
     };

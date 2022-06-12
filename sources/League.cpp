@@ -85,21 +85,65 @@ int League::nPositiveDiff()const{
     }
     return n;
 }
-string League::getStats(int topNWinners)const{
-    string out = "-----Teams-----\n";
+
+int League::timesWonUnderDog(string team){
+    int n = 0;
+    for(auto const& game: teams[team].getGames()){
+        //get the other team
+        string opponent = (game->getAway()==team)? game->getHome():game->getAway();
+        if(teams[team].getSkill() < teams[opponent].getSkill()){
+            n++;
+        }
+    }
+    return n;
+}
+
+
+string League::getStats(int topNWinners){
+    string out = "Teams-----------W/L ratio-------total point diff\n";
     vector<string> winners =  topWinners(topNWinners);
     for (auto const& team: winners){
-        out+=team+"\n";
+        string team_string;
+        if(team.length()>MAX_PARAM_LEN){
+            team_string += team.substr(0,MAX_PARAM_LEN)+"...  ";
+        }
+        else{
+            team_string += team + string(MAX_PARAM_LEN-team.length()+5,' ');
+        }
+        string stat2 = to_string(100*teams[team].getWinCount()/(double)teams[team].getGames().size());
+        if(stat2.length()>MAX_PARAM_LEN){
+            team_string += stat2.substr(0,MAX_PARAM_LEN)+"%    ";
+        }
+        else{
+            team_string += stat2 + "%" +string(MAX_PARAM_LEN-stat2.length()+4,' ');
+        }
+        team_string += to_string(teams[team].getScoreDiff());
+
+        out+=team_string+"\n";
     }
-    out+="-----Longest win streak-----\n"+getSeasonLongestStreak(true);
+    out+="Longest win streak: "+getSeasonLongestStreak(true);
     out+="\n";
-    out+="-----Longest lose streak-----\n"+getSeasonLongestStreak(false);
+    out+="Longest lose streak: "+getSeasonLongestStreak(false);
     out+="\n";
-    out+="-----Number of teams that scored more points then lost-----\n"+nPositiveDiff();
+    out+="Number of teams that scored more points then lost: "+nPositiveDiff();
     out+="\n";
+    out+="Number of times each team won with less skill: ";
+    out+="\n";
+    for (auto const& team: winners){
+        out+=team+": ";
+        out+=timesWonUnderDog(team);
+        out+="\n";
+    }
+    out+="AVG points per game: ";
+    out+="\n";
+    for (auto const& team: winners){
+        out+=team+": ";
+        out+=teams[team].getAvgPoints();
+        out+="\n";
+    }
     return out;
 }
-ostream& basketball::operator<<(std::ostream& output, const League& league){
+ostream& basketball::operator<<(std::ostream& output, League& league){
     output<<league.getStats(MAX_TEAMS);
     
 
