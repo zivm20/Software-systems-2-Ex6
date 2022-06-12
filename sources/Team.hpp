@@ -42,10 +42,12 @@ namespace basketball{
             inline std::string getName() const{return name;}
             inline void addGame(Game* game){teamGames.push_back(game);}
             inline vector<Game*> getGames()const{return teamGames;}
-            int getWinCount();
-            int getLongestStreak(bool win);
-            int getScoreDiff();
-            int getHardestWin();
+            inline bool operator==(const Team& t2){return name==t2.getName();}
+
+            int getWinCount()const;
+            int getLongestStreak(bool win)const;
+            int getScoreDiff()const;
+            
 
             ~Team();
     };

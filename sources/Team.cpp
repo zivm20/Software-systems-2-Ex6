@@ -9,14 +9,14 @@ Team::Team(std::string _name, double _skill):name(_name),skill(_skill){
 
 }
 
-int Team::getWinCount(){
+int Team::getWinCount()const{
     int n;
     for (auto const& game: teamGames){
         if(game->getWinner() == name) n++;
     }
     return n;
 }
-int Team::getLongestStreak(bool win){
+int Team::getLongestStreak(bool win)const{
     
     int bestStreak;
     int n;
@@ -33,7 +33,7 @@ int Team::getLongestStreak(bool win){
     return bestStreak;
 }
 
-int Team::getScoreDiff(){
+int Team::getScoreDiff()const{
     int diff;
     for (auto const& game: teamGames){
         //if this team is home
@@ -45,9 +45,7 @@ int Team::getScoreDiff(){
     return diff;
 }
 
-int Team::getHardestWin(){
 
-}
 
 
 Team::~Team(){

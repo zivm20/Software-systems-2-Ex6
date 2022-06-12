@@ -8,7 +8,7 @@ namespace basketball{
     class League{
         private:
             std::map<std::string,Team> teams; 
-
+            
         public:
             League();
             League(const std::vector<Team>& _teams);
@@ -20,7 +20,11 @@ namespace basketball{
             inline std::map<std::string,Team>& getTeams(){
                 return this->teams;
             }
-            
+            std::vector<std::string> topWinners(int amount)const;
+            int getSeasonLongestStreak(bool win)const;
+            int nPositiveDiff()const;
+            friend ostream& operator<<(std::ostream& output, const League& league);
+            std::string getStats(int topNWinners)const;
 
             
 

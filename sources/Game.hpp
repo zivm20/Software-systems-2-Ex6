@@ -1,7 +1,9 @@
 #include <string>
 #include <time.h>
 #include <random>
-
+#include <algorithm>
+#include <iostream>
+#include <stdexcept>
 namespace basketball{
     const int HOME_MIN_SCORE_ROLL = 55;
     const int AWAY_MIN_SCORE_ROLL = 50;
