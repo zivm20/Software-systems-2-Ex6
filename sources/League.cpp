@@ -14,7 +14,7 @@ League::League(const std::vector<Team*>& _teams):teams(){
             teams.emplace(pair<string,Team*>(_teams[i]->getName(),_teams[i]));
         }
         else{
-            teams.emplace(pair<string,Team*>("NoName "+i,new Team{"NoName "+i}));
+            teams.emplace(pair<string,Team*>("NoName "+to_string(i),new Team{"NoName "+to_string(i)}));
         }
     }
 }
@@ -24,14 +24,14 @@ League::League(const std::vector<string>& _teams):teams(){
             teams.emplace(pair<string,Team*>(_teams[i],new Team{_teams[i]}));
         }
         else{
-            teams.emplace(pair<string,Team*>("NoName "+i,new Team{"NoName "+i}));
+            teams.emplace(pair<string,Team*>("NoName "+to_string(i),new Team{"NoName "+to_string(i)}));
         }
     }
 }
 
 League::League(): teams(){
     for(size_t i = 0; i<MAX_TEAMS; i++){
-        teams.emplace(pair<string,Team*>("NoName "+i,new Team{"NoName "+i}));
+        teams.emplace(pair<string,Team*>("NoName "+to_string(i),new Team{"NoName "+to_string(i)}));
     }
 }
 
@@ -47,8 +47,8 @@ vector<string> League::topWinners(int amount)const{
         for (auto const& team: teams){
             if(std::find(out.begin(), out.end(), team.first) != out.end()){
                 int wins = team.second->getWinCount();
-                int losses = wins - team.second->getGames().size();
-                double ratio = 100*wins/(double(wins+losses));
+                int losses = wins - (int)team.second->getGames().size();
+                double ratio = 100*wins/((double)(wins+losses));
                 if(bestRatio < ratio){
                     bestTeam = team.first;
                     bestRatio = ratio;
@@ -67,7 +67,7 @@ vector<string> League::topWinners(int amount)const{
         }
         out.push_back(bestTeam);
     }
-    
+    return out;
 }
 int League::getSeasonLongestStreak(bool win)const{
     int bestStreak;
@@ -121,17 +121,17 @@ string League::getStats(int topNWinners){
 
         out+=team_string+"\n";
     }
-    out+="Longest win streak: "+getSeasonLongestStreak(true);
+    out+="Longest win streak: "+to_string(getSeasonLongestStreak(true));
     out+="\n";
-    out+="Longest lose streak: "+getSeasonLongestStreak(false);
+    out+="Longest lose streak: "+to_string(getSeasonLongestStreak(false));
     out+="\n";
-    out+="Number of teams that scored more points then lost: "+nPositiveDiff();
+    out+="Number of teams that scored more points then lost: "+to_string(nPositiveDiff());
     out+="\n";
     out+="Number of times each team won with less skill: ";
     out+="\n";
     for (auto const& team: winners){
         out+=team+": ";
-        out+=timesWonUnderDog(team);
+        out+=to_string(timesWonUnderDog(team));
         out+="\n";
     }
     out+="AVG points per game: ";

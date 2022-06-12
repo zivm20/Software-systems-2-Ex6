@@ -17,8 +17,9 @@ namespace basketball{
 
             inline double getSkill() const {return skill;}
             inline std::string getName() const{return name;}
+            inline std::string* getPName() {return &name;}
             inline void addGame(Game* game){teamGames.push_back(game);}
-            inline vector<Game*> getGames()const{return teamGames;}
+            inline std::vector<Game*> getGames()const{return teamGames;}
             inline bool operator==(const Team& t2){return name==t2.getName();}
 
             int getWinCount()const;

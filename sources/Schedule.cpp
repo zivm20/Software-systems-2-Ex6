@@ -63,16 +63,24 @@ void Schedule::roundRobin(){
 }
 void Schedule::processRound(){
     for(size_t i = 0; i<MAX_TEAMS/2; i++){
-        Team team1 = league.getTeam(matchups[0][i]);
-        Team team2 = league.getTeam(matchups[1][i]);
+
+        Game* newGame;
+
         //after MAX_TEAMS -1 rounds we are now repeating the cycle so now we will
         //switch the home and away teams
         if(round >= MAX_TEAMS -1){
-            team1 = league.getTeam(matchups[1][i]);
-            team2 = league.getTeam(matchups[0][i]);
+            newGame = new Game(league.getPName(matchups[1][i]),
+                               league.getTeam(matchups[1][i]).getSkill(),
+                               league.getPName(matchups[0][i]), 
+                               league.getTeam(matchups[0][i]).getSkill());
         }
-        Game* newGame = new Game(&team1.getName(),team1.getSkill(),
-                                &team2.getName(), team2.getSkill());
+        else{
+            newGame = new Game(league.getPName(matchups[0][i]),
+                               league.getTeam(matchups[0][i]).getSkill(),
+                               league.getPName(matchups[1][i]), 
+                               league.getTeam(matchups[1][i]).getSkill());
+        }
+       
         addGame(newGame);
     }
 

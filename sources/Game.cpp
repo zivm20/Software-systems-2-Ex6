@@ -7,14 +7,15 @@ double basketball::random(){
     srand(time(NULL));
     return rand()/RAND_MAX;
 }
-int basketball::randomInt(int low=0, int high=RAND_MAX){
+int basketball::randomInt(int low, int high){
     srand(time(NULL));
     return (rand() % (high-low+1)) + low;
 }
 
 int basketball::normRandom(int low,int high, double mean, double std){
     normal_distribution<> dist{mean,std};
-    mt19937 generator {randomInt()};
+    std::random_device rd{};
+    mt19937 generator {rd()};
     double res = dist(generator);
     //make sure res is in range
     res = (high-low)*(res/dist.max()) + low;

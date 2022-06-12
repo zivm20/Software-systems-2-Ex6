@@ -15,20 +15,20 @@ namespace basketball{
     int normRandom(int low,int high, double mean, double std);
     class Game{
         private:
-            string* home;
+            std::string* home;
             int home_baskets;
-            string* away;
+            std::string* away;
             int away_baskets;
             bool winner;
             
         public:
-            Game(string* _home, double skillHome, string* _away, double skillAway);
-            string& getWinner();
+            Game(std::string* _home, double skillHome, std::string* _away, double skillAway);
+            std::string& getWinner();
             
-            inline string& getHome(){
+            inline std::string& getHome(){
                 return *home;
             }
-            inline string& getAway(){
+            inline std::string& getAway(){
                 return *away;
             }
             inline int homeScore()const{

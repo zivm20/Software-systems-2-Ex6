@@ -7,7 +7,7 @@ namespace basketball{
     class Schedule:public League{
         
         private:
-            string matchups[2][MAX_TEAMS/2];
+            std::string matchups[2][MAX_TEAMS/2];
             size_t round;
             League league;
             void init();
