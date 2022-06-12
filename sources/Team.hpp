@@ -1,6 +1,4 @@
-#include <string>
-#include <time.h>
-#include <random>
+#include "Game.hpp"
 /*
 vector<Team*> myTeams;
     myTeams.push_back(new Team("Golden State Warriors", 1));
@@ -29,12 +27,11 @@ vector<Team*> myTeams;
 
 namespace basketball{
     //helper functions for random number generations
-    double random();
-    int randomInt(int low=0, int high=RAND_MAX);
-    int normRandom(int low,int high, double mean, double std);
+    
     
     class Team{
         private:
+            std::vector<Game*> teamGames;
             double skill;
             std::string name;
         public:
@@ -43,6 +40,8 @@ namespace basketball{
 
             inline double getSkill(){return skill;}
             inline std::string getName(){return name;}
+            inline void addGame(Game* game){teamGames.push_back(game);}
 
+            ~Team();
     };
 }

@@ -14,18 +14,20 @@ Schedule::Schedule(vector<string>& _teams):League(_teams){
 }
 
 void Schedule::init(){
-    for(size_t i = 0; i<MAX_TEAMS/2; i++){
-        matchups[0][i] = i;
-        matchups[1][i] = i+MAX_TEAMS/2;
+    size_t i = 0;
+    for (auto const& team: getTeams()){
+        matchups[i/(MAX_TEAMS/2)][i%(MAX_TEAMS/2)] = team.first;
+        i++;
     }
+    
 }
 
 void Schedule::roundRobin(){
     if(round < 2*(MAX_TEAMS-1)){
         //the last number in the top array and first in the bottom array will get overwritten
         //example for [[0, 1, 2, 3],[4, 5, 6, 7]]
-        int temp1 = matchups[0][MAX_TEAMS/2 -1]; //3
-        int temp2 = matchups[1][0]; //4
+        string temp1 = matchups[0][MAX_TEAMS/2 -1]; //3
+        string temp2 = matchups[1][0]; //4
 
         for(size_t i = 0; i<MAX_TEAMS/2 -1; i++){
             //[0, 1, 2, 3] -> [0, 1, 2, 2] -> [0, 1, 1, 2] -> [0, 0, 1, 2]
@@ -66,7 +68,8 @@ void Schedule::processRound(){
             team1 = getTeam(matchups[1][i]);
             team2 = getTeam(matchups[0][i]);
         }
-        Game* newGame = new Game(&team1,&team2);
+        Game* newGame = new Game(&team1.getName(),team1.getSkill(),
+                                &team2.getName(), team2.getSkill());
         //handle processing the game
         processGame(newGame);
         addGame(newGame);

@@ -6,7 +6,7 @@ namespace basketball{
     class Schedule:public League{
         
         private:
-            int matchups[2][MAX_TEAMS/2];
+            string matchups[2][MAX_TEAMS/2];
             size_t round;
             void init();
             void processRound();
