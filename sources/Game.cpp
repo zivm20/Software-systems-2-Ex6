@@ -22,7 +22,7 @@ int basketball::normRandom(int low,int high, double mean, double std){
     return (int)res;
 }
 
-Game::Game(string* _home, double skillHome, string* _away, double skillAway):home(_home),away(_away){
+Game::Game(string* _home, double skillHome, string* _away, double skillAway):home(_home),away(_away),winner(false){
     //mean and std sourced from https://www.teamrankings.com/nba/stat/points-per-game?date=2022-06-13
     //for years 2005 - 2021
     //run NBA_data.py for more information
@@ -43,19 +43,19 @@ Game::Game(string* _home, double skillHome, string* _away, double skillAway):hom
     }
 
     if(home_baskets > away_baskets)
-        winner = 1;
+        winner = true;
     else if(home_baskets < away_baskets)
-        winner = 0;
+        winner = false;
     else{
-        //winner is already 0
+        //winner is already false
         double rnd = random();
         //weighted coin toss based on the difference between the team's skill
         //more skilled teams have a higher chance to win in overtime
         if(rnd + (skillHome-skillAway) >= 0.5)
-            winner = 1;
+            winner = true;
     }
 }
 
 string& Game::getWinner(){
-    return (winner==1)? *home:*away;
+    return (winner)? *home:*away;
 }

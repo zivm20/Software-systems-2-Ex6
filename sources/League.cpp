@@ -4,7 +4,7 @@ using namespace std;
 
 
 
-League::League(std::vector<Team>& _teams):teams(){
+League::League(const std::vector<Team>& _teams):teams(){
     for(size_t i = 0; i<MAX_TEAMS; i++){
         if(i<_teams.size()){
             teams.emplace(pair<string,Team>(_teams[i].getName(),_teams[i]));
@@ -15,7 +15,7 @@ League::League(std::vector<Team>& _teams):teams(){
         }
     }
 }
-League::League(std::vector<string>& _teams):teams(){
+League::League(const std::vector<string>& _teams):teams(){
     for(size_t i = 0; i<MAX_TEAMS; i++){
         if(i<_teams.size()){
             teams.emplace(pair<string,Team>(_teams[i],Team{_teams[i]}));
@@ -30,11 +30,6 @@ League::League(): teams(){
     for(size_t i = 0; i<MAX_TEAMS; i++){
         teams.emplace(pair<string,Team>("NoName "+i,Team{"NoName "+i}));
     }
-}
-
-
-void processGame(Game& game){
-    
 }
 
 

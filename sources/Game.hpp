@@ -15,7 +15,7 @@ namespace basketball{
             int home_baskets;
             string* away;
             int away_baskets;
-            int winner;
+            bool winner;
             
         public:
             Game(string* _home, double skillHome, string* _away, double skillAway);

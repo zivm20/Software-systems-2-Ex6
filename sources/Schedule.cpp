@@ -2,20 +2,20 @@
 using namespace basketball;
 using namespace std;
 
-Schedule::Schedule():League(){
+Schedule::Schedule():league(){
     init();
 }
 
-Schedule::Schedule(vector<Team>& _teams):League(_teams){
+Schedule::Schedule(const vector<Team>& _teams):league(_teams){
     init();
 }
-Schedule::Schedule(vector<string>& _teams):League(_teams){
+Schedule::Schedule(const vector<string>& _teams):league(_teams){
     init();
 }
 
 void Schedule::init(){
     size_t i = 0;
-    for (auto const& team: getTeams()){
+    for (auto const& team: league.getTeams()){
         matchups[i/(MAX_TEAMS/2)][i%(MAX_TEAMS/2)] = team.first;
         i++;
     }
@@ -60,19 +60,17 @@ void Schedule::roundRobin(){
 }
 void Schedule::processRound(){
     for(size_t i = 0; i<MAX_TEAMS/2; i++){
-        Team team1 = getTeam(matchups[0][i]);
-        Team team2 = getTeam(matchups[1][i]);
+        Team team1 = league.getTeam(matchups[0][i]);
+        Team team2 = league.getTeam(matchups[1][i]);
         //after MAX_TEAMS -1 rounds we are now repeating the cycle so now we will
         //switch the home and away teams
         if(round >= MAX_TEAMS -1){
-            team1 = getTeam(matchups[1][i]);
-            team2 = getTeam(matchups[0][i]);
+            team1 = league.getTeam(matchups[1][i]);
+            team2 = league.getTeam(matchups[0][i]);
         }
         Game* newGame = new Game(&team1.getName(),team1.getSkill(),
                                 &team2.getName(), team2.getSkill());
-        //handle processing the game
-        processGame(newGame);
-        addGame(newGame);
+        league.addGame(newGame);
     }
 
 }

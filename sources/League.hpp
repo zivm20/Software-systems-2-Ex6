@@ -8,16 +8,11 @@ namespace basketball{
     class League{
         private:
             std::map<std::string,Team> teams; 
-            
-        protected:
-            void processGame(Game*& game);
-            void addGame(Game*& game);
-            
 
         public:
             League();
-            League(std::vector<Team>& _teams);
-            League(std::vector<std::string>& _teams);
+            League(const std::vector<Team>& _teams);
+            League(const std::vector<std::string>& _teams);
             
             inline Team& getTeam(const string& name){
                 return this->teams[name];
@@ -25,7 +20,7 @@ namespace basketball{
             inline std::map<std::string,Team>& getTeams(){
                 return this->teams;
             }
-            
+            void addGame(Game*& game);
 
             
 

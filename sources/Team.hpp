@@ -38,9 +38,15 @@ namespace basketball{
             Team(std::string _name);
             Team(std::string _name, double _skill);
 
-            inline double getSkill(){return skill;}
-            inline std::string getName(){return name;}
+            inline double getSkill() const {return skill;}
+            inline std::string getName() const{return name;}
             inline void addGame(Game* game){teamGames.push_back(game);}
+
+            int getWinCount();
+            int getLongestStreak(bool win);
+            int getScoreDiff();
+            
+            int getHardestWin();
 
             ~Team();
     };
