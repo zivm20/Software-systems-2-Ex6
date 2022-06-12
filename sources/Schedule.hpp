@@ -1,6 +1,7 @@
 #include "League.hpp"
 #include <map>
 #include <vector>
+#pragma once
 
 namespace basketball{
     class Schedule:public League{
@@ -16,7 +17,7 @@ namespace basketball{
         public:
             Schedule();
             Schedule(const League& _league);
-            Schedule(const std::vector<Team>& _teams);
+            Schedule(const std::vector<Team*>& _teams);
             Schedule(const std::vector<std::string>& _teams);
             void roundRobin();
             void endGame();

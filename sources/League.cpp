@@ -5,33 +5,33 @@ using namespace std;
 
 
 
-League::League(const std::vector<Team>& _teams):teams(){
+League::League(const std::vector<Team*>& _teams):teams(){
     for(size_t i = 0; i<MAX_TEAMS; i++){
         if(i<_teams.size()){
-            if(_teams[i].getGames().size() > 0){
+            if(_teams[i]->getGames().size() > 0){
                 throw runtime_error("cannot initialize League with teams that have played before!");
             }
-            teams.emplace(pair<string,Team>(_teams[i].getName(),_teams[i]));
+            teams.emplace(pair<string,Team*>(_teams[i]->getName(),_teams[i]));
         }
         else{
-            teams.emplace(pair<string,Team>("NoName "+i,Team{"NoName "+i}));
+            teams.emplace(pair<string,Team*>("NoName "+i,new Team{"NoName "+i}));
         }
     }
 }
 League::League(const std::vector<string>& _teams):teams(){
     for(size_t i = 0; i<MAX_TEAMS; i++){
         if(i<_teams.size()){
-            teams.emplace(pair<string,Team>(_teams[i],Team{_teams[i]}));
+            teams.emplace(pair<string,Team*>(_teams[i],new Team{_teams[i]}));
         }
         else{
-            teams.emplace(pair<string,Team>("NoName "+i,Team{"NoName "+i}));
+            teams.emplace(pair<string,Team*>("NoName "+i,new Team{"NoName "+i}));
         }
     }
 }
 
 League::League(): teams(){
     for(size_t i = 0; i<MAX_TEAMS; i++){
-        teams.emplace(pair<string,Team>("NoName "+i,Team{"NoName "+i}));
+        teams.emplace(pair<string,Team*>("NoName "+i,new Team{"NoName "+i}));
     }
 }
 
@@ -46,16 +46,16 @@ vector<string> League::topWinners(int amount)const{
         string bestTeam;
         for (auto const& team: teams){
             if(std::find(out.begin(), out.end(), team.first) != out.end()){
-                int wins = team.second.getWinCount();
-                int losses = wins - team.second.getGames().size();
+                int wins = team.second->getWinCount();
+                int losses = wins - team.second->getGames().size();
                 double ratio = 100*wins/(double(wins+losses));
                 if(bestRatio < ratio){
                     bestTeam = team.first;
                     bestRatio = ratio;
-                    bestDiff = team.second.getScoreDiff();
+                    bestDiff = team.second->getScoreDiff();
                 }
                 else if(bestRatio == ratio){
-                    int diff = team.second.getScoreDiff();
+                    int diff = team.second->getScoreDiff();
                     if(diff < bestDiff){
                         bestTeam = team.first;
                         bestRatio = ratio;
@@ -72,14 +72,14 @@ vector<string> League::topWinners(int amount)const{
 int League::getSeasonLongestStreak(bool win)const{
     int bestStreak;
     for (auto const& team: teams){
-        bestStreak = max(team.second.getLongestStreak(win),bestStreak);
+        bestStreak = max(team.second->getLongestStreak(win),bestStreak);
     }
     return bestStreak;
 }
 int League::nPositiveDiff()const{
     int n;
     for (auto const& team: teams){
-        if(team.second.getScoreDiff()>0){
+        if(team.second->getScoreDiff()>0){
             n++;
         }
     }
@@ -88,10 +88,10 @@ int League::nPositiveDiff()const{
 
 int League::timesWonUnderDog(string team){
     int n = 0;
-    for(auto const& game: teams[team].getGames()){
+    for(auto const& game: getTeam(team).getGames()){
         //get the other team
         string opponent = (game->getAway()==team)? game->getHome():game->getAway();
-        if(teams[team].getSkill() < teams[opponent].getSkill()){
+        if(getTeam(team).getSkill() < getTeam(opponent).getSkill()){
             n++;
         }
     }
@@ -110,14 +110,14 @@ string League::getStats(int topNWinners){
         else{
             team_string += team + string(MAX_PARAM_LEN-team.length()+5,' ');
         }
-        string stat2 = to_string(100*teams[team].getWinCount()/(double)teams[team].getGames().size());
+        string stat2 = to_string(100*getTeam(team).getWinCount()/(double)getTeam(team).getGames().size());
         if(stat2.length()>MAX_PARAM_LEN){
             team_string += stat2.substr(0,MAX_PARAM_LEN)+"%    ";
         }
         else{
             team_string += stat2 + "%" +string(MAX_PARAM_LEN-stat2.length()+4,' ');
         }
-        team_string += to_string(teams[team].getScoreDiff());
+        team_string += to_string(getTeam(team).getScoreDiff());
 
         out+=team_string+"\n";
     }
@@ -138,7 +138,7 @@ string League::getStats(int topNWinners){
     out+="\n";
     for (auto const& team: winners){
         out+=team+": ";
-        out+=teams[team].getAvgPoints();
+        out+=getTeam(team).getAvgPoints();
         out+="\n";
     }
     return out;
@@ -146,9 +146,11 @@ string League::getStats(int topNWinners){
 ostream& basketball::operator<<(std::ostream& output, League& league){
     output<<league.getStats(MAX_TEAMS);
     
-
-
     return output;
 }
 
-
+League::~League(){
+    for (auto const& team: teams){
+        delete team.second;
+    }
+}

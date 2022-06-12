@@ -45,16 +45,16 @@ int Team::getScoreDiff()const{
     return diff;
 }
 
-double getAvgPoints(){
+double Team::getAvgPoints()const{
     int sum = 0;
     for (auto const& game: teamGames){
         //if this team is home
         if((game->getHome() == name)) 
             sum +=  game->homeScore();
         else
-            sum += game->awaySocre();
+            sum += game->awayScore();
     }
-    return sum/(double)teamGames.length();
+    return sum/(double)teamGames.size();
 }
 
 

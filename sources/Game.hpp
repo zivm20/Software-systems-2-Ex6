@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
+#pragma once
+
 namespace basketball{
     const int HOME_MIN_SCORE_ROLL = 55;
     const int AWAY_MIN_SCORE_ROLL = 50;

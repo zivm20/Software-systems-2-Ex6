@@ -6,7 +6,7 @@ Schedule::Schedule():league(){
     init();
 }
 
-Schedule::Schedule(const vector<Team>& _teams):league(_teams){
+Schedule::Schedule(const vector<Team*>& _teams):league(_teams){
     init();
 }
 Schedule::Schedule(const vector<string>& _teams):league(_teams){
