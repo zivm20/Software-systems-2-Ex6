@@ -17,10 +17,11 @@ namespace basketball{
 
             inline double getSkill() const {return skill;}
             inline std::string getName() const{return name;}
-            inline std::string* getPName() {return &name;}
-            inline void addGame(Game* game){teamGames.push_back(game);}
+            
+            void addGame(const std::string& _home, double skillHome,const std::string& _away, double skillAway);
             inline std::vector<Game*> getGames()const{return teamGames;}
             inline bool operator==(const Team& t2){return name==t2.getName();}
+            bool operator<(const Team& t2)const;
 
             int getWinCount()const;
             int getLongestStreak(bool win)const;

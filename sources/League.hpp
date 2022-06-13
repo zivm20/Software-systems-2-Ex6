@@ -6,10 +6,13 @@
 
 namespace basketball{
     static const size_t MAX_TEAMS = 20;
-    static const size_t MAX_PARAM_LEN = 11;
+    static const size_t MAX_PARAM_LEN = 20;
     class League{
         private:
-            std::map<std::string,Team*> teams; 
+            std::map<std::string,Team*> teams;
+        protected:
+            void addGame(const std::string& _home, double skillHome,const std::string& _away, double skillAway);
+
             
         public:
             League();
@@ -20,11 +23,9 @@ namespace basketball{
                 
                 return *teams[name];
             }
-            inline std::string* getPName(const std::string& name){
-                
-                return teams[name]->getPName();
-            }
+            
             inline std::map<std::string,Team*>& getTeams(){
+                
                 return teams;
             }
             std::vector<std::string> topWinners(int amount)const;
@@ -33,6 +34,12 @@ namespace basketball{
             int timesWonUnderDog(std::string team);
             friend std::ostream& operator<<(std::ostream& output, League& league);
             std::string getStats(int topNWinners);
+
+            inline void printLeague(){
+                for (auto const& team: getTeams()){
+                    std::cout<<team.first<<", "<<team.second->getName()<<std::endl;
+                }
+            }
 
             ~League();
 

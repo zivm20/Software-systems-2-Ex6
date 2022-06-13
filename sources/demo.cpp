@@ -27,10 +27,18 @@ int main(){
     myTeams.push_back(new Team("Memphis Grizzlies", 0.5));
     myTeams.push_back(new Team("Utah Jazz", 0.3));
     myTeams.push_back(new Team("Washington Wizards", 0));
-    myTeams.push_back(new Team("Oklahoma City Thunder", 0.1));
+    myTeams.push_back(new Team("pp", 0.5));
+    //myTeams.push_back(new Team("Oklahoma City Thunder", 0.1));
 
-    League myLeague{myTeams};
-    cout<<myLeague;
+    Schedule s{myTeams};
+    
+    for (auto const& team: s.getTeams()){
+        //cout<<team.second->getName()<<endl;
+    }
+    s.endGame();
+    //cout<<s.getTeam("pp").getGames()[0]->getHome()<<endl;
+    //s.getStats(20);
+    cout<<s;
 
 
     return 0;

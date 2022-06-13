@@ -2,23 +2,23 @@
 using namespace basketball;
 using namespace std;
 
-Schedule::Schedule():league(){
+Schedule::Schedule():League(){
     init();
 }
 
-Schedule::Schedule(const vector<Team*>& _teams):league(_teams){
+Schedule::Schedule(const vector<Team*>& _teams):League(_teams),round(0){
     init();
 }
-Schedule::Schedule(const vector<string>& _teams):league(_teams){
+Schedule::Schedule(const vector<string>& _teams):League(_teams),round(0){
     init();
 }
-Schedule::Schedule(const League& _league):league(_league){
+Schedule::Schedule(const League& _league):League(_league),round(0){
     init();
 }
 
 void Schedule::init(){
     size_t i = 0;
-    for (auto const& team: league.getTeams()){
+    for (auto const& team: getTeams()){
         matchups[i/(MAX_TEAMS/2)][i%(MAX_TEAMS/2)] = team.first;
         i++;
     }
@@ -64,31 +64,28 @@ void Schedule::roundRobin(){
 void Schedule::processRound(){
     for(size_t i = 0; i<MAX_TEAMS/2; i++){
 
-        Game* newGame;
-
         //after MAX_TEAMS -1 rounds we are now repeating the cycle so now we will
         //switch the home and away teams
         if(round >= MAX_TEAMS -1){
-            newGame = new Game(league.getPName(matchups[1][i]),
-                               league.getTeam(matchups[1][i]).getSkill(),
-                               league.getPName(matchups[0][i]), 
-                               league.getTeam(matchups[0][i]).getSkill());
+            addGame(getTeam(matchups[1][i]).getName(),
+                    getTeam(matchups[1][i]).getSkill(),
+                    getTeam(matchups[0][i]).getName(), 
+                    getTeam(matchups[0][i]).getSkill());
+            
         }
         else{
-            newGame = new Game(league.getPName(matchups[0][i]),
-                               league.getTeam(matchups[0][i]).getSkill(),
-                               league.getPName(matchups[1][i]), 
-                               league.getTeam(matchups[1][i]).getSkill());
+            addGame(getTeam(matchups[0][i]).getName(),
+                    getTeam(matchups[0][i]).getSkill(),
+                    getTeam(matchups[1][i]).getName(), 
+                    getTeam(matchups[1][i]).getSkill());
+            
         }
        
-        addGame(newGame);
+        
     }
 
 }
-void Schedule::addGame(Game*& game){
-    getTeam(game->getHome()).addGame(game);
-    getTeam(game->getAway()).addGame(game);
-}
+
 
 void Schedule::endGame(){
     while(round < 2*(MAX_TEAMS-1)){

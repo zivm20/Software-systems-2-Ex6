@@ -9,10 +9,9 @@ namespace basketball{
         private:
             std::string matchups[2][MAX_TEAMS/2];
             size_t round;
-            League league;
             void init();
             void processRound();
-            void addGame(Game*& game);
+            
             
         public:
             Schedule();

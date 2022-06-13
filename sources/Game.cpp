@@ -23,7 +23,7 @@ int basketball::normRandom(int low,int high, double mean, double std){
     return (int)res;
 }
 
-Game::Game(string* _home, double skillHome, string* _away, double skillAway):home(_home),away(_away),winner(false){
+Game::Game(const string& _home, double skillHome,const string& _away, double skillAway):home(_home),away(_away),winner(false){
     //mean and std sourced from https://www.teamrankings.com/nba/stat/points-per-game?date=2022-06-13
     //for years 2005 - 2021
     //run NBA_data.py for more information
@@ -57,6 +57,6 @@ Game::Game(string* _home, double skillHome, string* _away, double skillAway):hom
     }
 }
 
-string& Game::getWinner(){
-    return (winner)? *home:*away;
+string Game::getWinner()const{
+    return (winner)? home:away;
 }

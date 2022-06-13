@@ -6,78 +6,75 @@ using namespace std;
 
 
 League::League(const std::vector<Team*>& _teams):teams(){
+    
     for(size_t i = 0; i<MAX_TEAMS; i++){
         if(i<_teams.size()){
             if(_teams[i]->getGames().size() > 0){
                 throw runtime_error("cannot initialize League with teams that have played before!");
             }
-            teams.emplace(pair<string,Team*>(_teams[i]->getName(),_teams[i]));
+            teams.insert(pair<string,Team*>(_teams[i]->getName(),_teams[i]));
         }
         else{
-            teams.emplace(pair<string,Team*>("NoName "+to_string(i),new Team{"NoName "+to_string(i)}));
+            teams.insert(pair<string,Team*>("NoName "+to_string(i),new Team{"NoName "+to_string(i)}));
         }
     }
+    
 }
 League::League(const std::vector<string>& _teams):teams(){
     for(size_t i = 0; i<MAX_TEAMS; i++){
         if(i<_teams.size()){
-            teams.emplace(pair<string,Team*>(_teams[i],new Team{_teams[i]}));
+            teams.insert(pair<string,Team*>(_teams[i],new Team{_teams[i]}));
         }
         else{
-            teams.emplace(pair<string,Team*>("NoName "+to_string(i),new Team{"NoName "+to_string(i)}));
+            teams.insert(pair<string,Team*>("NoName "+to_string(i),new Team{"NoName "+to_string(i)}));
         }
     }
 }
 
 League::League(): teams(){
     for(size_t i = 0; i<MAX_TEAMS; i++){
-        teams.emplace(pair<string,Team*>("NoName "+to_string(i),new Team{"NoName "+to_string(i)}));
+        teams.insert(pair<string,Team*>("NoName "+to_string(i),new Team{"NoName "+to_string(i)}));
     }
 }
 
 vector<string> League::topWinners(int amount)const{
     vector<string> out;
+    vector<Team*> temp;
     if(amount > MAX_TEAMS){
         throw runtime_error("Not enough teams!");
     }
-    for(size_t i = 0; i<amount; i++){
-        double bestRatio = 0;
-        double bestDiff = INT32_MAX;
-        string bestTeam;
-        for (auto const& team: teams){
-            if(std::find(out.begin(), out.end(), team.first) != out.end()){
-                int wins = team.second->getWinCount();
-                int losses = wins - (int)team.second->getGames().size();
-                double ratio = 100*wins/((double)(wins+losses));
-                if(bestRatio < ratio){
-                    bestTeam = team.first;
-                    bestRatio = ratio;
-                    bestDiff = team.second->getScoreDiff();
-                }
-                else if(bestRatio == ratio){
-                    int diff = team.second->getScoreDiff();
-                    if(diff < bestDiff){
-                        bestTeam = team.first;
-                        bestRatio = ratio;
-                        bestDiff = diff;
-                    }
-                }
+    for (auto const& team: teams){
+        temp.push_back(team.second);
+    }
+    
+    //simple buble sort such that the n last numbers will be our the n largest 
+    //values
+    for (size_t i= 0; i < amount; i++){
+        for (size_t j = 0; j < MAX_TEAMS - i - 1; j++){
+            
+            if (*temp[j+1] < *temp[j]){
+                Team* temp2 = temp[j];
+                temp[j] = temp[j+1];
+                temp[j+1] = temp2;
             }
-
         }
-        out.push_back(bestTeam);
+        
+    }
+
+    for(size_t i = 0; i<amount; i++){
+        out.push_back(temp[MAX_TEAMS-i-1]->getName());
     }
     return out;
 }
 int League::getSeasonLongestStreak(bool win)const{
-    int bestStreak;
+    int bestStreak=0;
     for (auto const& team: teams){
         bestStreak = max(team.second->getLongestStreak(win),bestStreak);
     }
     return bestStreak;
 }
 int League::nPositiveDiff()const{
-    int n;
+    int n=0;
     for (auto const& team: teams){
         if(team.second->getScoreDiff()>0){
             n++;
@@ -98,10 +95,28 @@ int League::timesWonUnderDog(string team){
     return n;
 }
 
+void League::addGame(const string& _home, double skillHome,const string& _away, double skillAway){
+    //printLeague();
+
+    //cout <<_home<<"   "<< teams[_home]->getName()<<endl;
+    teams[_home]->addGame(_home,skillHome,_away,skillAway);
+    teams[_away]->addGame(_home,skillHome,_away,skillAway);
+    
+}
 
 string League::getStats(int topNWinners){
-    string out = "Teams-----------W/L ratio-------total point diff\n";
+    string out = "Teams";
+    out+=string(MAX_PARAM_LEN+5-out.length(),'-');
+    out+= "W/L ratio";
+    
+    out+=string(2*(MAX_PARAM_LEN+5)-out.length(),'-');
+    out+= "total point diff";
+    
+    out+=string(3*(MAX_PARAM_LEN+5)-out.length(),'-');
+    out+="\n";
     vector<string> winners =  topWinners(topNWinners);
+    
+    
     for (auto const& team: winners){
         string team_string;
         if(team.length()>MAX_PARAM_LEN){
@@ -110,6 +125,7 @@ string League::getStats(int topNWinners){
         else{
             team_string += team + string(MAX_PARAM_LEN-team.length()+5,' ');
         }
+        
         string stat2 = to_string(100*getTeam(team).getWinCount()/(double)getTeam(team).getGames().size());
         if(stat2.length()>MAX_PARAM_LEN){
             team_string += stat2.substr(0,MAX_PARAM_LEN)+"%    ";
@@ -121,31 +137,34 @@ string League::getStats(int topNWinners){
 
         out+=team_string+"\n";
     }
-    out+="Longest win streak: "+to_string(getSeasonLongestStreak(true));
-    out+="\n";
-    out+="Longest lose streak: "+to_string(getSeasonLongestStreak(false));
-    out+="\n";
-    out+="Number of teams that scored more points then lost: "+to_string(nPositiveDiff());
-    out+="\n";
-    out+="Number of times each team won with less skill: ";
-    out+="\n";
-    for (auto const& team: winners){
-        out+=team+": ";
-        out+=to_string(timesWonUnderDog(team));
-        out+="\n";
-    }
-    out+="AVG points per game: ";
-    out+="\n";
-    for (auto const& team: winners){
-        out+=team+": ";
-        out+=getTeam(team).getAvgPoints();
-        out+="\n";
-    }
+    
     return out;
 }
 ostream& basketball::operator<<(std::ostream& output, League& league){
     output<<league.getStats(MAX_TEAMS);
-    
+    output<<"------------------------------------"<<endl;
+    output<<"Longest win streak: "+to_string(league.getSeasonLongestStreak(true))<<endl;
+    output<<"------------------------------------"<<endl;
+    output<<"Longest lose streak: "+to_string(league.getSeasonLongestStreak(false))<<endl;
+    output<<"------------------------------------"<<endl;
+    output<<"Number of teams that scored more points then lost: "+to_string(league.nPositiveDiff())<<endl;
+    output<<"------------------------------------"<<endl;
+    output<<"Number of times each team won with less skill: "<<endl<<endl;
+ 
+    for (auto const& team: league.getTeams()){
+        output<<team.first+": ";
+        output<<to_string(league.timesWonUnderDog(team.first));
+        output<<endl;
+    }
+    output<<"------------------------------------"<<endl;
+    output<<"AVG points per game: "<<endl<<endl;
+   
+    for (auto const& team: league.getTeams()){
+        output<<team.first+": ";
+        output<<league.getTeam(team.first).getAvgPoints();
+        output<<endl;
+    }
+    output<<"------------------------------------";
     return output;
 }
 
