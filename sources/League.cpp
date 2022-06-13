@@ -4,12 +4,16 @@ using namespace basketball;
 using namespace std;
 
 
-
-League::League(const std::vector<Team*>& _teams):teams(){
+League::League(League& league2){
+    for (auto const& team: league2.getTeams()){
+        teams.insert(pair<string,Team*>(team.first,new Team(*team.second)));
+    }
+}
+League::League(const std::vector<Team*>& _teams){
     
     for(size_t i = 0; i<MAX_TEAMS; i++){
         if(i<_teams.size()){
-            if(_teams[i]->getGames().size() > 0){
+            if(!_teams[i]->getGames().empty()){
                 throw runtime_error("cannot initialize League with teams that have played before!");
             }
             teams.insert(pair<string,Team*>(_teams[i]->getName(),_teams[i]));
@@ -20,7 +24,7 @@ League::League(const std::vector<Team*>& _teams):teams(){
     }
     
 }
-League::League(const std::vector<string>& _teams):teams(){
+League::League(const std::vector<string>& _teams){
     for(size_t i = 0; i<MAX_TEAMS; i++){
         if(i<_teams.size()){
             teams.insert(pair<string,Team*>(_teams[i],new Team{_teams[i]}));
@@ -31,11 +35,21 @@ League::League(const std::vector<string>& _teams):teams(){
     }
 }
 
-League::League(): teams(){
+League::League(){
     for(size_t i = 0; i<MAX_TEAMS; i++){
         teams.insert(pair<string,Team*>("NoName "+to_string(i),new Team{"NoName "+to_string(i)}));
     }
 }
+
+League& League::operator=(League& league2){
+    if(this != &league2){
+        for (auto const& team: league2.getTeams()){
+            teams.insert(pair<string,Team*>(team.first,new Team(*team.second)));
+        }
+    }
+    return *this;
+}
+
 
 vector<string> League::topWinners(int amount)const{
     vector<string> out;
@@ -83,7 +97,7 @@ int League::nPositiveDiff()const{
     return n;
 }
 
-int League::timesWonUnderDog(string team){
+int League::timesWonUnderDog(const string& team){
     int n = 0;
     for(auto const& game: getTeam(team).getGames()){
         //get the other team
@@ -106,13 +120,13 @@ void League::addGame(const string& _home, double skillHome,const string& _away, 
 
 string League::getStats(int topNWinners){
     string out = "Teams";
-    out+=string(MAX_PARAM_LEN+5-out.length(),'-');
+    out+=string(MAX_PARAM_LEN+PARAMATER_BUFFER-out.length(),'-');
     out+= "W/L ratio";
     
-    out+=string(2*(MAX_PARAM_LEN+5)-out.length(),'-');
+    out+=string(2*(MAX_PARAM_LEN+PARAMATER_BUFFER)-out.length(),'-');
     out+= "total point diff";
     
-    out+=string(3*(MAX_PARAM_LEN+5)-out.length(),'-');
+    out+=string(3*(MAX_PARAM_LEN+PARAMATER_BUFFER)-out.length(),'-');
     out+="\n";
     vector<string> winners =  topWinners(topNWinners);
     
@@ -123,15 +137,15 @@ string League::getStats(int topNWinners){
             team_string += team.substr(0,MAX_PARAM_LEN)+"...  ";
         }
         else{
-            team_string += team + string(MAX_PARAM_LEN-team.length()+5,' ');
+            team_string += team + string(MAX_PARAM_LEN-team.length()+PARAMATER_BUFFER,' ');
         }
         
-        string stat2 = to_string(100*getTeam(team).getWinCount()/(double)getTeam(team).getGames().size());
+        string stat2 = to_string(ONE_HUNDRED*getTeam(team).getWinCount()/(double)getTeam(team).getGames().size());
         if(stat2.length()>MAX_PARAM_LEN){
             team_string += stat2.substr(0,MAX_PARAM_LEN)+"%    ";
         }
         else{
-            team_string += stat2 + "%" +string(MAX_PARAM_LEN-stat2.length()+4,' ');
+            team_string += stat2 + "%" +string(MAX_PARAM_LEN-stat2.length()+PARAMATER_BUFFER-1,' ');
         }
         team_string += to_string(getTeam(team).getScoreDiff());
 

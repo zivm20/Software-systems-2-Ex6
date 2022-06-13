@@ -2,7 +2,7 @@
 using namespace basketball;
 using namespace std;
 
-Schedule::Schedule():League(){
+Schedule::Schedule():round(0){
     init();
 }
 
@@ -12,9 +12,7 @@ Schedule::Schedule(const vector<Team*>& _teams):League(_teams),round(0){
 Schedule::Schedule(const vector<string>& _teams):League(_teams),round(0){
     init();
 }
-Schedule::Schedule(const League& _league):League(_league),round(0){
-    init();
-}
+
 
 void Schedule::init(){
     size_t i = 0;
