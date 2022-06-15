@@ -3,14 +3,25 @@ using namespace basketball;
 using namespace std;
 
 Team::Team(const string& _name):name(_name),skill(random()){
-
+    if(skill < 0||skill>1){
+        throw runtime_error("0<=skill<=1 ");
+ 
+    }
 }
 Team::Team(const string& _name, const double& _skill):name(_name),skill(_skill){
-    
+        if(skill < 0||skill>1){
+        throw runtime_error("0<=skill<=1 ");
+ 
+    }
 }
+
 Team::Team(const Team& t2):name(t2.getName()),skill(t2.getSkill()){
     for (auto const& game: t2.getGames()){
         teamGames.push_back(new Game(*game));
+    }
+    if(skill < 0||skill>1){
+        throw runtime_error("0<=skill<=1 ");
+ 
     }
 }
 

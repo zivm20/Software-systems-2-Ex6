@@ -11,6 +11,8 @@ namespace basketball{
             size_t round;
             void init();
             void processRound();
+            void roundRobin();
+            void endGame();
             
             
         public:
@@ -18,8 +20,7 @@ namespace basketball{
             
             Schedule(const std::vector<Team*>& _teams);
             Schedule(const std::vector<std::string>& _teams);
-            void roundRobin();
-            void endGame();
+            
             
             
             inline size_t getRound()const{return round;}

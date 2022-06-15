@@ -18,20 +18,15 @@ int basketball::normRandom(int low,int high, double mean, double std){
     normal_distribution<> dist{mean,std};
     std::random_device rd{};
     mt19937 generator {rd()};
-    double res = 0;
+    
     //make sure res is in range
-    do{
-        res = dist(generator);
+    int res = max(low,min((int)dist(generator),high));
         
-    }while(res > high || res<low);
+    
 
-    return (int)res;
+    return res;
 }
-std::string home;
-int home_baskets;
-std::string away;
-int away_baskets;
-bool winner;
+
 Game::Game(const Game& g2): home(g2.getHome()), home_baskets(g2.homeScore()), away(g2.getAway()), away_baskets(g2.awayScore()), winner(g2.getWinner()==g2.getHome()){
 
 }
@@ -76,5 +71,5 @@ string Game::getWinner()const{
     return (winner)? home:away;
 }
 Game::~Game(){
-    
+
 }

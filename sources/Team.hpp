@@ -3,7 +3,7 @@
 
 
 namespace basketball{
-    //helper functions for random number generations
+    
     
     
     class Team{
@@ -12,6 +12,7 @@ namespace basketball{
             double skill;
             std::string name;
         public:
+            Team();
             Team(const std::string& _name);
             Team(const std::string& _name, const double& _skill);
             Team(const Team& t2);

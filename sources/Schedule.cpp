@@ -20,6 +20,7 @@ void Schedule::init(){
         matchups[i/(MAX_TEAMS/2)][i%(MAX_TEAMS/2)] = team.first;
         i++;
     }
+    endGame();
     
 }
 

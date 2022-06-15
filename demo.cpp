@@ -1,7 +1,5 @@
-#include "Schedule.hpp"
-#include "Game.hpp"
-#include "Team.hpp"
-#include "League.hpp"
+#include "sources/Schedule.hpp"
+
 #include <vector>
 using namespace std;
 using namespace basketball;
@@ -31,9 +29,7 @@ int main(){
     myTeams.push_back(new Team("Oklahoma City Thunder", 0.1));
 
     Schedule s{myTeams};
-    s.endGame();
-    //cout<<s.getTeam("pp").getGames()[0]->getHome()<<endl;
-    //s.getStats(20);
+    
     cout<<s<<endl;
 
 
